@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cuestionario Física</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2ff;
+        }
+
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 50px;
+            box-shadow: 0 0 10px #777;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn {
+            background: #4a6cf7;
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #3554c5;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9faff;
+            border-left: 4px solid #4a6cf7;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Evaluación de Física</h1>
+    <p>Se seleccionarán 5 preguntas aleatorias de un total de 15.</p>
+
+    <button onclick="iniciarQuiz()" class="btn">Iniciar Evaluación</button>
+
+    <form id="quizForm" class="hidden">
+        <div id="questionsContainer"></div>
+        <button type="button" onclick="calificar()" class="btn">Enviar</button>
+    </form>
+
+    <h2 id="resultado"></h2>
+</div>
+
+<script>
+    const preguntas = [
+        {
+            pregunta: "Un péndulo simple tiene una longitud de 1.2 m. ¿Cuál es su periodo aproximado?",
+            opciones: ["1.8 s", "2.2 s", "3.5 s"],
+            correcta: 0
+        },
+        {
+            pregunta: "Un péndulo oscila 25 veces en 40 segundos. ¿Cuál es su frecuencia?",
+            opciones: ["0.4 Hz", "0.625 Hz", "1.6 Hz"],
+            correcta: 1
+        },
+        {
+            pregunta: "Un resorte tiene una constante de 30 N/m y se estira 0.2 m. ¿Cuál es la energía potencial?",
+            opciones: ["0.6 J", "0.4 J", "0.2 J"],
+            correcta: 2
+        },
+        {
+            pregunta: "Una onda tiene longitud 2 m y frecuencia 5 Hz. ¿Cuál es su velocidad?",
+            opciones: ["5 m/s", "10 m/s", "15 m/s"],
+            correcta: 1
+        },
+        {
+            pregunta: "Una persona escucha un sonido grave. Esto significa que la frecuencia es:",
+            opciones: ["Alta", "Baja", "Constante"],
+            correcta: 1
+        },
+        {
+            pregunta: "Una onda transporta 50 W en una cuerda. Si el tiempo es 5 s, ¿qué energía transporta?",
+            opciones: ["250 J", "10 J", "55 J"],
+            correcta: 0
+        },
+        {
+            pregunta: "Un péndulo tiene un periodo de 3 s. ¿Cuántas oscilaciones hace en 15 s?",
+            opciones: ["10", "5", "8"],
+            correcta: 0
+        },
+        {
+            pregunta: "Si la amplitud de una onda aumenta, la energía...",
+            opciones: ["Disminuye", "Aumenta", "Se mantiene"],
+            correcta: 1
+        },
+        {
+            pregunta: "La intensidad disminuye al alejarse de la fuente debido a:",
+            opciones: ["Ley del cuadrado inverso", "Fricción del aire", "Gravedad"],
+            correcta: 0
+        },
+        {
+            pregunta: "Un sonido tiene intensidad de 0.1 W/m². ¿Qué significa?",
+            opciones: ["Es muy débil", "Es peligroso", "Es moderado"],
+            correcta: 2
+        },
+        {
+            pregunta: "El timbre depende principalmente de:",
+            opciones: ["Altura", "Frecuencia", "Armónicos"],
+            correcta: 2
+        },
+        {
+            pregunta: "Un resorte oscila con frecuencia 4 Hz. ¿Cuál es su periodo?",
+            opciones: ["0.5 s", "0.25 s", "1 s"],
+            correcta: 1
+        },
+        {
+            pregunta: "Si una onda aumenta su frecuencia pero la velocidad es la misma, la longitud de onda:",
+            opciones: ["Aumenta", "Disminuye", "No cambia"],
+            correcta: 1
+        },
+        {
+            pregunta: "El movimiento oscilatorio es:",
+            opciones: ["Uniforme", "Amortiguado", "Periódico"],
+            correcta: 2
+        },
+        {
+            pregunta: "Si un péndulo tiene longitud mayor, su periodo:",
+            opciones: ["Aumenta", "Disminuye", "No cambia"],
+            correcta: 0
+        }
+    ];
+
+    let seleccionPreguntas = [];
+
+    function iniciarQuiz() {
+        document.getElementById("quizForm").classList.remove("hidden");
+
+        const contenedor = document.getElementById("questionsContainer");
+        contenedor.innerHTML = "";
+
+        // Elegir 5 preguntas aleatorias
+        seleccionPreguntas = preguntas
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 5);
+
+        seleccionPreguntas.forEach((q, i) => {
+            contenedor.innerHTML += `
+                <div class="question">
+                    <h3>${i + 1}. ${q.pregunta}</h3>
+                    ${q.opciones.map((op, idx) =>
+                        `<label><input type="radio" name="p${i}" value="${idx}"> ${op}</label><br>`
+                    ).join("")}
+                </div>
+            `;
+        });
+    }
+
+    function calificar() {
+        let puntaje = 0;
+
+        for (let i = 0; i < 5; i++) {
+            let radios = document.getElementsByName("p" + i);
+            for (let r of radios) {
+                if (r.checked && parseInt(r.value) === seleccionPreguntas[i].correcta) {
+                    puntaje++;
+                }
+            }
+        }
+
+        document.getElementById("resultado").innerHTML =
+            "Tu puntaje es: " + puntaje + "/5";
+    }
+</script>
+
+</body>
+</html>
